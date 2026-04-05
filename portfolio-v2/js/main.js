@@ -72,3 +72,12 @@
     });
   });
 })();
+
+/* ---- LinkedIn post expand/collapse ---- */
+(function initLinkedInPosts() {
+  document.querySelectorAll('.linkedin-post-body').forEach(function(body) {
+    body.addEventListener('click', function() {
+      body.classList.toggle('expanded');
+    });
+  });
+})();

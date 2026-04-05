@@ -679,9 +679,11 @@ a:hover {
 
 .linkedin-post-body {
   padding: 4px 16px 12px;
-  max-height: 220px;
+  max-height: 180px;
   overflow: hidden;
   position: relative;
+  cursor: pointer;
+  transition: max-height 0.4s ease;
 }
 
 .linkedin-post-body::after {
@@ -697,8 +699,18 @@ a:hover {
   justify-content: flex-start;
   padding: 0 16px 8px;
   font-size: 0.78rem;
-  color: #666;
-  font-weight: 500;
+  color: #0a66c2;
+  font-weight: 600;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.linkedin-post-body.expanded {
+  max-height: 600px;
+}
+
+.linkedin-post-body.expanded::after {
+  opacity: 0;
 }
 
 .linkedin-post-body p {
