@@ -29,6 +29,7 @@
     --header-bg: rgba(10, 12, 16, 0.85);
     --table-row-hover: rgba(255,255,255,0.04);
     --table-header-bg: rgba(255,255,255,0.03);
+    --thead-solid: #12161f;
   }
 
   .light-mode {
@@ -47,6 +48,7 @@
     --table-row-hover: rgba(0,0,0,0.03);
     --table-header-bg: rgba(0,0,0,0.02);
     --accent-dim: rgba(85,232,181,0.2);
+    --thead-solid: #fafafa;
   }
 
   html, body {
@@ -294,6 +296,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-shrink: 0;
   }
 
   .subtab {
@@ -321,6 +324,119 @@
     color: var(--accent);
   }
 
+  /* ── CONTENT GRID (sidebar + table) ─────────────── */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ── SIDEBAR ─────────────────────────────────────── */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    min-width: 0;
+  }
+
+  .sidebar-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    flex-shrink: 0;
+  }
+
+  .sidebar-card-title {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+
+  /* Data summary rows */
+  .summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .summary-row:last-child { border-bottom: none; }
+
+  .summary-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+  }
+
+  .summary-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .dot-a { width: 7px; height: 7px; border-radius: 50%; background: #30d158; flex-shrink: 0; }
+  .dot-b { width: 7px; height: 7px; border-radius: 50%; background: #ffd60a; flex-shrink: 0; }
+  .dot-c { width: 7px; height: 7px; border-radius: 50%; background: #ff453a; flex-shrink: 0; }
+  .dot-email { width: 7px; height: 7px; border-radius: 50%; background: #0a84ff; flex-shrink: 0; }
+  .dot-phone { width: 7px; height: 7px; border-radius: 50%; background: #bf5af2; flex-shrink: 0; }
+
+  /* Bar chart rows */
+  .bar-row {
+    margin-bottom: 8px;
+  }
+
+  .bar-row:last-child { margin-bottom: 0; }
+
+  .bar-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3px;
+  }
+
+  .bar-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+  }
+
+  .bar-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex-shrink: 0;
+    margin-left: 6px;
+  }
+
+  .bar-track {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+    transition: width 0.5s ease;
+  }
+
   /* ── TABLE PANEL ─────────────────────────────────── */
   .panel {
     background: var(--card-bg);
@@ -329,7 +445,6 @@
     border: 1px solid var(--border);
     border-radius: 12px;
     overflow: hidden;
-    flex: 1;
     display: flex;
     flex-direction: column;
     min-height: 0;
@@ -343,6 +458,20 @@
     border-bottom: 1px solid var(--border);
     gap: 10px;
     flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+
+  .panel-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 
   .panel-title {
@@ -357,7 +486,6 @@
     background: var(--border);
     border-radius: 10px;
     padding: 2px 8px;
-    margin-left: 8px;
   }
 
   .search-input {
@@ -369,7 +497,7 @@
     font-size: 12px;
     font-family: inherit;
     outline: none;
-    width: 190px;
+    width: 160px;
     transition: border-color 0.2s, width 0.3s;
     backdrop-filter: blur(8px);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a1a1a6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
@@ -381,8 +509,57 @@
 
   .search-input:focus {
     border-color: var(--accent);
-    width: 230px;
+    width: 200px;
     box-shadow: 0 0 0 2px rgba(85,232,181,0.12);
+  }
+
+  /* Tier filter select */
+  .tier-select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 28px 5px 10px;
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    backdrop-filter: blur(8px);
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23a1a1a6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+  }
+
+  .tier-select:focus, .tier-select:hover {
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+  }
+
+  /* Export CSV button */
+  .export-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-family: inherit;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    backdrop-filter: blur(8px);
+    white-space: nowrap;
+  }
+
+  .export-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
   }
 
   .table-wrap {
@@ -397,7 +574,7 @@
   }
 
   thead tr {
-    background: var(--table-header-bg);
+    background: var(--thead-solid);
     position: sticky;
     top: 0;
     z-index: 2;
@@ -564,6 +741,12 @@
     z-index: 999;
     letter-spacing: 0.2px;
   }
+
+  /* ── MOBILE ──────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .content-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -631,24 +814,38 @@ const SAMPLE_DATA = {
     { company: "Skydive Hibaldstow",        email: "info@skydivehibaldstow.co.uk",     country: "GB", campaign: "eu",     replies: 1, status: "replied" },
   ],
   dz: [
-    { org: "Centre Ecole Parachutisme de Grenoble", country: "FR", email: "secretariat@parachutisme38.fr",    tier: "A", source: "FFP",           aircraft: "C 207 Soloy" },
-    { org: "Drop Zone de Marennes",                  country: "FR", email: "bigair.parachutisme@gmail.com",    tier: "A", source: "FFP",           aircraft: "Cessna 208" },
-    { org: "Ecole de Parachutisme Orleans",          country: "FR", email: "contact@parachutisme-orleans.net", tier: "A", source: "FFP",           aircraft: "Pilatus B2H4" },
+    { org: "Centre Ecole Parachutisme de Grenoble", country: "FR", email: "secretariat@parachutisme38.fr",    tier: "A", source: "FFP",            aircraft: "C 207 Soloy" },
+    { org: "Drop Zone de Marennes",                  country: "FR", email: "bigair.parachutisme@gmail.com",    tier: "A", source: "FFP",            aircraft: "Cessna 208" },
+    { org: "Ecole de Parachutisme Orleans",          country: "FR", email: "contact@parachutisme-orleans.net", tier: "A", source: "FFP",            aircraft: "Pilatus B2H4" },
     { org: "Skydive Nuggets",                        country: "DE", email: "info@skydive-nuggets.de",          tier: "A", source: "Dropzonefinder", aircraft: "Cessna Caravan" },
-    { org: "Paracentrum Texel",                      country: "NL", email: "info@paracentrumtexel.nl",         tier: "A", source: "KNVVL",         aircraft: "Cessna Caravan" },
-    { org: "Skydive Spain",                          country: "ES", email: "info@skydivespain.com",            tier: "B", source: "Google",         aircraft: "PAC 750" },
-    { org: "iSkydive DeLand",                        country: "US", email: "info@iskydive.com",                tier: "A", source: "USPA",          aircraft: "Twin Otter" },
-    { org: "Chicagoland Skydiving Center",           country: "US", email: "info@skydivecsc.com",              tier: "A", source: "USPA",          aircraft: "Cessna Caravan" },
-    { org: "Skydive Perris",                         country: "US", email: "info@skydiveperris.com",           tier: "A", source: "USPA",          aircraft: "Twin Otter" },
-    { org: "British Parachute Schools",              country: "GB", email: "info@bps.org.uk",                  tier: "B", source: "BPA",           aircraft: "Cessna 206" },
-    { org: "Prague Skydive",                         country: "CZ", email: "info@pragueskydive.com",           tier: "B", source: "Google",         aircraft: "" },
-    { org: "Skydive Stockholm",                      country: "SE", email: "info@skydivestockholm.se",         tier: "A", source: "Google",         aircraft: "Cessna 208" },
-    { org: "Skydive Empuriabrava",                   country: "ES", email: "info@skydiveempuriabrava.com",    tier: "A", source: "Google",         aircraft: "PAC 750" },
-    { org: "Aeroklub Ceske Budejovice",              country: "CZ", email: "info@aeroklub-cb.cz",             tier: "C", source: "Google",         aircraft: "" },
-    { org: "Skydive Copenhagen",                     country: "DK", email: "info@skydivecopenhagen.dk",       tier: "B", source: "Dropzonefinder", aircraft: "Cessna 182" },
+    { org: "Paracentrum Texel",                      country: "NL", email: "info@paracentrumtexel.nl",         tier: "A", source: "KNVVL",          aircraft: "Cessna Caravan" },
+    { org: "Skydive Spain",                          country: "ES", email: "info@skydivespain.com",            tier: "B", source: "Google",          aircraft: "PAC 750" },
+    { org: "iSkydive DeLand",                        country: "US", email: "info@iskydive.com",                tier: "A", source: "USPA",           aircraft: "Twin Otter" },
+    { org: "Chicagoland Skydiving Center",           country: "US", email: "info@skydivecsc.com",              tier: "A", source: "USPA",           aircraft: "Cessna Caravan" },
+    { org: "Skydive Perris",                         country: "US", email: "info@skydiveperris.com",           tier: "A", source: "USPA",           aircraft: "Twin Otter" },
+    { org: "British Parachute Schools",              country: "GB", email: "info@bps.org.uk",                  tier: "B", source: "BPA",            aircraft: "Cessna 206" },
+    { org: "Prague Skydive",                         country: "CZ", email: "info@pragueskydive.com",           tier: "B", source: "Google",          aircraft: "" },
+    { org: "Skydive Stockholm",                      country: "SE", email: "info@skydivestockholm.se",         tier: "A", source: "Google",          aircraft: "Cessna 208" },
+    { org: "Skydive Empuriabrava",                   country: "ES", email: "info@skydiveempuriabrava.com",    tier: "A", source: "Google",          aircraft: "PAC 750" },
+    { org: "Aeroklub Ceske Budejovice",              country: "CZ", email: "info@aeroklub-cb.cz",             tier: "C", source: "Google",          aircraft: "" },
+    { org: "Skydive Copenhagen",                     country: "DK", email: "info@skydivecopenhagen.dk",       tier: "B", source: "Dropzonefinder",  aircraft: "Cessna 182" },
+    { org: "Skydive Empuriabrava",                   country: "ES", email: "info@skydiveempuriabrava.com",    tier: "A", source: "Google",          aircraft: "PAC 750 XL" },
+    { org: "Skydive Algarve",                        country: "PT", email: "info@skydivealgarve.com",          tier: "A", source: "Google",          aircraft: "Cessna 208" },
+    { org: "Fallschirmsport Damme",                  country: "DE", email: "info@fsc-damme.de",                tier: "A", source: "Dropzonefinder", aircraft: "Cessna Caravan" },
+    { org: "Abeille Parachutisme",                   country: "FR", email: "info@abeille-parachutisme.fr",    tier: "B", source: "FFP",             aircraft: "Pilatus Porter" },
+    { org: "Paraquad NL",                            country: "NL", email: "info@paraquad.nl",                 tier: "B", source: "KNVVL",          aircraft: "Cessna 206" },
+    { org: "Tempelhofer Fallschirmsport",            country: "DE", email: "info@tfs-berlin.de",               tier: "A", source: "Dropzonefinder", aircraft: "Cessna 208" },
+    { org: "Skydive Hibaldstow",                     country: "GB", email: "info@skydiving.co.uk",             tier: "A", source: "BPA",            aircraft: "Dornier 228" },
+    { org: "Flyteam Estonia",                        country: "EE", email: "info@flyteam.ee",                  tier: "B", source: "Google",          aircraft: "" },
+    { org: "Horizon Skydive",                        country: "SE", email: "info@horizonskydive.se",           tier: "A", source: "Google",          aircraft: "Cessna Caravan" },
+    { org: "Skydive Croatia",                        country: "HR", email: "info@skydivecroatia.com",          tier: "B", source: "Dropzonefinder", aircraft: "Pilatus PC-6" },
+    { org: "Fallskjerm Innlandet",                   country: "NO", email: "post@fallskjerm-innlandet.no",     tier: "A", source: "Google",          aircraft: "" },
+    { org: "Skydive Fano",                           country: "DK", email: "info@skydivefano.dk",              tier: "A", source: "Google",          aircraft: "Cessna 208" },
+    { org: "Olimpic Skydive Center",                 country: "GR", email: "info@olimpicskydive.gr",           tier: "B", source: "Google",          aircraft: "" },
+    { org: "Aeroklub Nowy Targ",                     country: "PL", email: "biuro@aeroklubnowytarg.pl",        tier: "A", source: "Google",          aircraft: "Cessna 182" },
   ],
   nap: [
-    { org: "Skydive Finland (DZ Utti)",  country: "FI", email: "info@skydivefinland.fi",     aircraft: "Caravan",       reg: "OH-DZF", score: 100 },
+    { org: "Skydive Finland (DZ Utti)",  country: "FI", email: "info@skydivefinland.fi",     aircraft: "Caravan",        reg: "OH-DZF", score: 100 },
     { org: "Skydive Nuggets",            country: "DE", email: "info@skydive-nuggets.de",    aircraft: "Cessna Caravan", reg: "D-FALB", score: 100 },
     { org: "Paracentrum Texel",          country: "NL", email: "info@paracentrumtexel.nl",   aircraft: "Cessna Caravan", reg: "PH-FST", score: 85  },
     { org: "Skydive Perris",             country: "US", email: "info@skydiveperris.com",     aircraft: "Twin Otter",     reg: "N900SA", score: 90  },
@@ -660,11 +857,12 @@ const SAMPLE_DATA = {
 // ─────────────────────────────────────────────
 //  STATE
 // ─────────────────────────────────────────────
-let activeTab       = 'dz';
-let activeCampaign  = 'all';
-let searchQuery     = '';
-let sortState       = { col: null, dir: 1 };
-let isLight         = false;
+let activeTab      = 'dz';
+let activeCampaign = 'all';
+let searchQuery    = '';
+let tierFilter     = 'all';
+let sortState      = { col: null, dir: 1 };
+let isLight        = false;
 
 // ─────────────────────────────────────────────
 //  UTILS
@@ -672,7 +870,8 @@ let isLight         = false;
 const countryFlags = {
   US:'🇺🇸', FR:'🇫🇷', DE:'🇩🇪', NL:'🇳🇱', ES:'🇪🇸', GB:'🇬🇧', FI:'🇫🇮',
   NO:'🇳🇴', SE:'🇸🇪', DK:'🇩🇰', CZ:'🇨🇿', MA:'🇲🇦', PL:'🇵🇱', IT:'🇮🇹',
-  BE:'🇧🇪', AT:'🇦🇹', CH:'🇨🇭', AU:'🇦🇺', NZ:'🇳🇿', CA:'🇨🇦',
+  BE:'🇧🇪', AT:'🇦🇹', CH:'🇨🇭', AU:'🇦🇺', NZ:'🇳🇿', CA:'🇨🇦', PT:'🇵🇹',
+  EE:'🇪🇪', HR:'🇭🇷', GR:'🇬🇷', NO:'🇳🇴',
 };
 
 function flag(code) {
@@ -693,13 +892,11 @@ function escHtml(s) {
 function toggleTheme() {
   isLight = !isLight;
   document.body.classList.toggle('light-mode', isLight);
-  const icon = document.getElementById('themeIcon');
+  const icon  = document.getElementById('themeIcon');
   const label = document.getElementById('themeLabel');
   if (isLight) {
     label.textContent = 'Dark';
-    icon.innerHTML = `
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-    `;
+    icon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
   } else {
     label.textContent = 'Light';
     icon.innerHTML = `
@@ -720,10 +917,11 @@ function toggleTheme() {
 //  TAB SWITCHING
 // ─────────────────────────────────────────────
 function switchTab(tab) {
-  activeTab = tab;
+  activeTab      = tab;
   activeCampaign = 'all';
-  searchQuery = '';
-  sortState = { col: null, dir: 1 };
+  searchQuery    = '';
+  tierFilter     = 'all';
+  sortState      = { col: null, dir: 1 };
   document.querySelectorAll('.tab').forEach(t => {
     t.classList.toggle('active', t.dataset.tab === tab);
   });
@@ -736,6 +934,7 @@ function switchCampaign(c) {
     t.classList.toggle('active', t.dataset.camp === c);
   });
   renderTable();
+  renderSidebar();
 }
 
 // ─────────────────────────────────────────────
@@ -745,28 +944,28 @@ function getMetrics() {
   if (activeTab === 'dz') {
     const d = SAMPLE_DATA.dz;
     return [
-      { label: 'Total Leads',  value: d.length,                             sub: 'dropzone ops' },
-      { label: 'Tier A',       value: d.filter(r=>r.tier==='A').length,     sub: 'high priority', accent: true },
-      { label: 'With Email',   value: d.filter(r=>r.email).length,          sub: 'contactable' },
-      { label: 'Countries',    value: [...new Set(d.map(r=>r.country))].length, sub: 'represented' },
+      { label: 'Total Leads', value: d.length,                                   sub: 'dropzone ops' },
+      { label: 'Tier A',      value: d.filter(r=>r.tier==='A').length,            sub: 'high priority', accent: true },
+      { label: 'With Email',  value: d.filter(r=>r.email).length,                 sub: 'contactable' },
+      { label: 'Countries',   value: [...new Set(d.map(r=>r.country))].length,    sub: 'represented' },
     ];
   }
   if (activeTab === 'outreach') {
     const d = SAMPLE_DATA.outreach;
     return [
-      { label: 'Sent',         value: d.length,                                      sub: 'emails sent' },
-      { label: 'Replied',      value: d.filter(r=>r.status==='replied').length,       sub: 'responses', accent: true },
-      { label: 'Reply Rate',   value: Math.round(d.filter(r=>r.status==='replied').length/d.length*100)+'%', sub: 'open rate' },
-      { label: 'Countries',    value: [...new Set(d.map(r=>r.country))].length,       sub: 'reached' },
+      { label: 'Sent',        value: d.length,                                                          sub: 'emails sent' },
+      { label: 'Replied',     value: d.filter(r=>r.status==='replied').length,                          sub: 'responses', accent: true },
+      { label: 'Reply Rate',  value: Math.round(d.filter(r=>r.status==='replied').length/d.length*100)+'%', sub: 'open rate' },
+      { label: 'Countries',   value: [...new Set(d.map(r=>r.country))].length,                          sub: 'reached' },
     ];
   }
   if (activeTab === 'nap') {
     const d = SAMPLE_DATA.nap;
     return [
-      { label: 'Aircraft',     value: d.length,                              sub: 'identified' },
-      { label: 'Avg Score',    value: Math.round(d.reduce((a,r)=>a+r.score,0)/d.length), sub: 'fit score', accent: true },
-      { label: 'With Email',   value: d.filter(r=>r.email).length,           sub: 'contactable' },
-      { label: 'Countries',    value: [...new Set(d.map(r=>r.country))].length, sub: 'represented' },
+      { label: 'Aircraft',    value: d.length,                                                sub: 'identified' },
+      { label: 'Avg Score',   value: Math.round(d.reduce((a,r)=>a+r.score,0)/d.length),       sub: 'fit score', accent: true },
+      { label: 'With Email',  value: d.filter(r=>r.email).length,                             sub: 'contactable' },
+      { label: 'Countries',   value: [...new Set(d.map(r=>r.country))].length,                sub: 'represented' },
     ];
   }
   return [];
@@ -775,26 +974,33 @@ function getMetrics() {
 // ─────────────────────────────────────────────
 //  FILTER & SORT
 // ─────────────────────────────────────────────
-function getFilteredData() {
+function getCampaignData() {
   let data = [...SAMPLE_DATA[activeTab]];
 
   if (activeTab === 'outreach' && activeCampaign !== 'all') {
     data = data.filter(r => r.campaign === activeCampaign);
   }
   if (activeTab === 'dz' && activeCampaign !== 'all') {
-    // For DZ, map campaign tags: eu includes non-US, na = US, scandi = NO/SE/DK/FI
     const scandiCountries = ['NO','SE','DK','FI'];
     const naCountries     = ['US','CA'];
     if (activeCampaign === 'eu')     data = data.filter(r => !naCountries.includes(r.country));
     if (activeCampaign === 'na')     data = data.filter(r => naCountries.includes(r.country));
     if (activeCampaign === 'scandi') data = data.filter(r => scandiCountries.includes(r.country));
   }
+  return data;
+}
+
+function getFilteredData() {
+  let data = getCampaignData();
+
+  // Tier filter (DZ tab only)
+  if (activeTab === 'dz' && tierFilter !== 'all') {
+    data = data.filter(r => r.tier === tierFilter);
+  }
 
   const q = searchQuery.toLowerCase();
   if (q) {
-    data = data.filter(r => {
-      return Object.values(r).some(v => String(v).toLowerCase().includes(q));
-    });
+    data = data.filter(r => Object.values(r).some(v => String(v).toLowerCase().includes(q)));
   }
 
   if (sortState.col !== null) {
@@ -810,11 +1016,133 @@ function getFilteredData() {
 }
 
 // ─────────────────────────────────────────────
+//  SIDEBAR RENDERING
+// ─────────────────────────────────────────────
+function buildBarChart(items, maxVal) {
+  if (!items.length) return '<div style="color:var(--text-tertiary);font-size:11px;padding:4px 0">No data</div>';
+  return items.map(item => `
+    <div class="bar-row">
+      <div class="bar-meta">
+        <span class="bar-label">${escHtml(item.label)}</span>
+        <span class="bar-count">${item.count}</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:${Math.round(item.count/maxVal*100)}%"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  if (!sidebar) return;
+
+  const campaignData = getCampaignData();
+
+  // ---- Data Summary ----
+  let summaryHtml = '';
+  if (activeTab === 'dz') {
+    const tA = campaignData.filter(r => r.tier === 'A').length;
+    const tB = campaignData.filter(r => r.tier === 'B').length;
+    const tC = campaignData.filter(r => r.tier === 'C').length;
+    const hasEmail = campaignData.filter(r => r.email).length;
+    summaryHtml = `
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Data Summary</div>
+        <div class="summary-row">
+          <span class="summary-label"><span class="dot-a"></span>Tier A</span>
+          <span class="summary-value">${tA}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><span class="dot-b"></span>Tier B</span>
+          <span class="summary-value">${tB}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><span class="dot-c"></span>Tier C</span>
+          <span class="summary-value">${tC}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><span class="dot-email"></span>Has Email</span>
+          <span class="summary-value">${hasEmail}</span>
+        </div>
+      </div>
+    `;
+  } else if (activeTab === 'outreach') {
+    const replied = campaignData.filter(r => r.status === 'replied').length;
+    const active  = campaignData.filter(r => r.status === 'active').length;
+    const hasEmail = campaignData.filter(r => r.email).length;
+    summaryHtml = `
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Data Summary</div>
+        <div class="summary-row">
+          <span class="summary-label"><span class="dot-a"></span>Replied</span>
+          <span class="summary-value">${replied}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><span class="dot-email"></span>Active</span>
+          <span class="summary-value">${active}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><span class="dot-email"></span>Has Email</span>
+          <span class="summary-value">${hasEmail}</span>
+        </div>
+      </div>
+    `;
+  } else {
+    const hasEmail = campaignData.filter(r => r.email).length;
+    summaryHtml = `
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Data Summary</div>
+        <div class="summary-row">
+          <span class="summary-label"><span class="dot-email"></span>Has Email</span>
+          <span class="summary-value">${hasEmail}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><span class="dot-a"></span>Identified</span>
+          <span class="summary-value">${campaignData.length}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // ---- Top Sources (DZ only) ----
+  let sourcesHtml = '';
+  if (activeTab === 'dz') {
+    const sourceCounts = {};
+    campaignData.forEach(r => { sourceCounts[r.source] = (sourceCounts[r.source]||0) + 1; });
+    const sorted = Object.entries(sourceCounts).sort((a,b) => b[1]-a[1]).slice(0,6);
+    const maxV = sorted.length ? sorted[0][1] : 1;
+    const items = sorted.map(([k,v]) => ({ label: k, count: v }));
+    sourcesHtml = `
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Top Sources</div>
+        ${buildBarChart(items, maxV)}
+      </div>
+    `;
+  }
+
+  // ---- Top Countries ----
+  const countryCounts = {};
+  campaignData.forEach(r => { countryCounts[r.country] = (countryCounts[r.country]||0) + 1; });
+  const sortedC = Object.entries(countryCounts).sort((a,b) => b[1]-a[1]).slice(0,5);
+  const maxC = sortedC.length ? sortedC[0][1] : 1;
+  const countryItems = sortedC.map(([k,v]) => ({ label: (countryFlags[k]||'🌐') + ' ' + k, count: v }));
+  const countriesHtml = `
+    <div class="sidebar-card">
+      <div class="sidebar-card-title">Top Countries</div>
+      ${buildBarChart(countryItems, maxC)}
+    </div>
+  `;
+
+  sidebar.innerHTML = summaryHtml + sourcesHtml + countriesHtml;
+}
+
+// ─────────────────────────────────────────────
 //  RENDER TABLE ONLY (fast update)
 // ─────────────────────────────────────────────
 function renderTable() {
-  const tbody = document.getElementById('tableBody');
-  const countEl = document.getElementById('tableCount');
+  const tbody    = document.getElementById('tableBody');
+  const countEl  = document.getElementById('tableCount');
   if (!tbody) return;
 
   const data = getFilteredData();
@@ -900,10 +1228,20 @@ function sortBy(col) {
 }
 
 // ─────────────────────────────────────────────
+//  TIER FILTER HANDLER
+// ─────────────────────────────────────────────
+function handleTierFilter(val) {
+  tierFilter = val;
+  renderTable();
+  const countEl = document.getElementById('tableCount');
+  if (countEl) countEl.textContent = getFilteredData().length;
+}
+
+// ─────────────────────────────────────────────
 //  FULL RENDER
 // ─────────────────────────────────────────────
 function render() {
-  const body = document.getElementById('dashBody');
+  const body    = document.getElementById('dashBody');
   const metrics = getMetrics();
 
   // Build metrics HTML
@@ -924,9 +1262,9 @@ function render() {
   if (activeTab === 'dz' || activeTab === 'outreach') {
     subTabsHtml = `
       <div class="subtabs-row animate-in">
-        <button class="subtab ${activeCampaign==='all'?'active':''}" data-camp="all"    onclick="switchCampaign('all')">All</button>
-        <button class="subtab ${activeCampaign==='eu'?'active':''}"  data-camp="eu"     onclick="switchCampaign('eu')">EU</button>
-        <button class="subtab ${activeCampaign==='na'?'active':''}"  data-camp="na"     onclick="switchCampaign('na')">NA</button>
+        <button class="subtab ${activeCampaign==='all'?'active':''}"    data-camp="all"    onclick="switchCampaign('all')">All</button>
+        <button class="subtab ${activeCampaign==='eu'?'active':''}"     data-camp="eu"     onclick="switchCampaign('eu')">EU</button>
+        <button class="subtab ${activeCampaign==='na'?'active':''}"     data-camp="na"     onclick="switchCampaign('na')">NA</button>
         <button class="subtab ${activeCampaign==='scandi'?'active':''}" data-camp="scandi" onclick="switchCampaign('scandi')">Scandi</button>
       </div>
     `;
@@ -936,50 +1274,71 @@ function render() {
   let columns = [];
   if (activeTab === 'dz') {
     columns = [
-      { label: 'Org Name',  key: 'org' },
-      { label: 'Country',   key: 'country' },
-      { label: 'Email',     key: 'email' },
-      { label: 'Tier',      key: 'tier' },
-      { label: 'Source',    key: 'source' },
-      { label: 'Aircraft',  key: 'aircraft' },
+      { label: 'Org Name', key: 'org' },
+      { label: 'Country',  key: 'country' },
+      { label: 'Email',    key: 'email' },
+      { label: 'Tier',     key: 'tier' },
+      { label: 'Source',   key: 'source' },
+      { label: 'Aircraft', key: 'aircraft' },
     ];
   } else if (activeTab === 'outreach') {
     columns = [
-      { label: 'Company',   key: 'company' },
-      { label: 'Country',   key: 'country' },
-      { label: 'Email',     key: 'email' },
-      { label: 'Campaign',  key: 'campaign' },
-      { label: 'Status',    key: 'status' },
-      { label: 'Replies',   key: 'replies' },
+      { label: 'Company',  key: 'company' },
+      { label: 'Country',  key: 'country' },
+      { label: 'Email',    key: 'email' },
+      { label: 'Campaign', key: 'campaign' },
+      { label: 'Status',   key: 'status' },
+      { label: 'Replies',  key: 'replies' },
     ];
   } else if (activeTab === 'nap') {
     columns = [
-      { label: 'Org Name',  key: 'org' },
-      { label: 'Country',   key: 'country' },
-      { label: 'Email',     key: 'email' },
-      { label: 'Aircraft',  key: 'aircraft' },
-      { label: 'Reg.',      key: 'reg' },
-      { label: 'Score',     key: 'score' },
+      { label: 'Org Name', key: 'org' },
+      { label: 'Country',  key: 'country' },
+      { label: 'Email',    key: 'email' },
+      { label: 'Aircraft', key: 'aircraft' },
+      { label: 'Reg.',     key: 'reg' },
+      { label: 'Score',    key: 'score' },
     ];
   }
 
   const tabLabel = activeTab === 'dz' ? 'Dropzone Operators' : activeTab === 'outreach' ? 'Outreach' : 'Aircraft Owners';
 
+  // Tier filter — only shown on DZ tab
+  const tierFilterHtml = activeTab === 'dz' ? `
+    <select class="tier-select" onchange="handleTierFilter(this.value)">
+      <option value="all"  ${tierFilter==='all'?'selected':''}>All Tiers</option>
+      <option value="A"    ${tierFilter==='A'?'selected':''}>Tier A</option>
+      <option value="B"    ${tierFilter==='B'?'selected':''}>Tier B</option>
+      <option value="C"    ${tierFilter==='C'?'selected':''}>Tier C</option>
+    </select>
+  ` : '';
+
   const tableHtml = `
     <div class="panel animate-in">
       <div class="panel-header">
-        <div style="display:flex;align-items:center;gap:0">
+        <div class="panel-header-left">
           <span class="panel-title">${tabLabel}</span>
           <span class="panel-count" id="tableCount">—</span>
         </div>
-        <input
-          class="search-input"
-          id="searchBox"
-          type="text"
-          placeholder="Search leads…"
-          value="${escHtml(searchQuery)}"
-          oninput="handleSearch(this.value)"
-        />
+        <div class="panel-header-right">
+          <input
+            class="search-input"
+            id="searchBox"
+            type="text"
+            placeholder="Search leads…"
+            value="${escHtml(searchQuery)}"
+            oninput="handleSearch(this.value)"
+          />
+          ${tierFilterHtml}
+          <button class="export-btn" onclick="alert('Demo mode — export not available')">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Export CSV
+          </button>
+        </div>
       </div>
       <div class="table-wrap">
         <table>
@@ -998,8 +1357,18 @@ function render() {
     </div>
   `;
 
-  body.innerHTML = metricsHtml + subTabsHtml + tableHtml;
+  // Sidebar
+  const sidebarHtml = `<div class="sidebar animate-in" id="sidebar"></div>`;
+
+  body.innerHTML = metricsHtml + subTabsHtml + `
+    <div class="content-grid animate-in">
+      ${sidebarHtml}
+      ${tableHtml}
+    </div>
+  `;
+
   renderTable();
+  renderSidebar();
 
   // Re-apply sort icon state
   if (sortState.col) {
