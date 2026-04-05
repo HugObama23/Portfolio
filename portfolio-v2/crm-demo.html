@@ -800,6 +800,57 @@
 
 <script>
 // ─────────────────────────────────────────────
+//  REAL STATISTICS (aggregate from full dataset)
+// ─────────────────────────────────────────────
+const REAL_STATS = {
+  dz: {
+    total: 1132,
+    tierA: 346, tierB: 613, tierC: 173,
+    withEmail: 710,
+    countries: 30,
+    sources: [
+      { name: "Dropzonefinder", count: 540 },
+      { name: "Google DZ",      count: 241 },
+      { name: "DZ & Tunnels",   count: 189 },
+      { name: "USPA",           count: 187 },
+      { name: "Google EU",      count: 141 },
+      { name: "FFP",            count: 46  },
+      { name: "Burble",         count: 21  },
+    ],
+    topCountries: [
+      { name: "US", flag: "🇺🇸", count: 473 },
+      { name: "FR", flag: "🇫🇷", count: 99  },
+      { name: "DE", flag: "🇩🇪", count: 91  },
+      { name: "IT", flag: "🇮🇹", count: 50  },
+      { name: "CZ", flag: "🇨🇿", count: 35  },
+      { name: "GB", flag: "🇬🇧", count: 34  },
+      { name: "ES", flag: "🇪🇸", count: 31  },
+      { name: "PL", flag: "🇵🇱", count: 28  },
+    ]
+  },
+  outreach: {
+    total: 610,
+    replied: 18,
+    active: 592,
+    sent: 200,
+    replyRate: "13.5%",
+    opportunities: 19,
+    pipelineValue: "$19,000",
+    campaigns: [
+      { name: "EU",     count: 351 },
+      { name: "NA",     count: 227 },
+      { name: "Scandi", count: 32  },
+    ]
+  },
+  nap: {
+    total: 510,
+    withEmail: 380,
+    withRegistration: 290,
+    countries: 18,
+  }
+};
+
+// ─────────────────────────────────────────────
 //  DATA
 // ─────────────────────────────────────────────
 const SAMPLE_DATA = {
@@ -942,30 +993,27 @@ function switchCampaign(c) {
 // ─────────────────────────────────────────────
 function getMetrics() {
   if (activeTab === 'dz') {
-    const d = SAMPLE_DATA.dz;
     return [
-      { label: 'Total Leads', value: d.length,                                   sub: 'dropzone ops' },
-      { label: 'Tier A',      value: d.filter(r=>r.tier==='A').length,            sub: 'high priority', accent: true },
-      { label: 'With Email',  value: d.filter(r=>r.email).length,                 sub: 'contactable' },
-      { label: 'Countries',   value: [...new Set(d.map(r=>r.country))].length,    sub: 'represented' },
+      { label: 'Total Operators', value: REAL_STATS.dz.total,     sub: 'dropzone ops' },
+      { label: 'Tier A Leads',    value: REAL_STATS.dz.tierA,     sub: 'high priority', accent: true },
+      { label: 'With Email',      value: REAL_STATS.dz.withEmail, sub: 'contactable' },
+      { label: 'Countries',       value: REAL_STATS.dz.countries, sub: 'represented' },
     ];
   }
   if (activeTab === 'outreach') {
-    const d = SAMPLE_DATA.outreach;
     return [
-      { label: 'Sent',        value: d.length,                                                          sub: 'emails sent' },
-      { label: 'Replied',     value: d.filter(r=>r.status==='replied').length,                          sub: 'responses', accent: true },
-      { label: 'Reply Rate',  value: Math.round(d.filter(r=>r.status==='replied').length/d.length*100)+'%', sub: 'open rate' },
-      { label: 'Countries',   value: [...new Set(d.map(r=>r.country))].length,                          sub: 'reached' },
+      { label: 'In Pipeline',  value: REAL_STATS.outreach.total,        sub: 'total contacts' },
+      { label: 'Replied',      value: REAL_STATS.outreach.replied,       sub: 'responses', accent: true },
+      { label: 'Reply Rate',   value: REAL_STATS.outreach.replyRate,     sub: 'of emails sent' },
+      { label: 'Opportunities',value: REAL_STATS.outreach.opportunities, sub: REAL_STATS.outreach.pipelineValue + ' pipeline' },
     ];
   }
   if (activeTab === 'nap') {
-    const d = SAMPLE_DATA.nap;
     return [
-      { label: 'Aircraft',    value: d.length,                                                sub: 'identified' },
-      { label: 'Avg Score',   value: Math.round(d.reduce((a,r)=>a+r.score,0)/d.length),       sub: 'fit score', accent: true },
-      { label: 'With Email',  value: d.filter(r=>r.email).length,                             sub: 'contactable' },
-      { label: 'Countries',   value: [...new Set(d.map(r=>r.country))].length,                sub: 'represented' },
+      { label: 'Total Aircraft',  value: REAL_STATS.nap.total,            sub: 'identified' },
+      { label: 'With Email',      value: REAL_STATS.nap.withEmail,         sub: 'contactable', accent: true },
+      { label: 'Confirmed Reg.',  value: REAL_STATS.nap.withRegistration,  sub: 'with registration' },
+      { label: 'Countries',       value: REAL_STATS.nap.countries,         sub: 'represented' },
     ];
   }
   return [];
@@ -1037,104 +1085,130 @@ function renderSidebar() {
   const sidebar = document.getElementById('sidebar');
   if (!sidebar) return;
 
-  const campaignData = getCampaignData();
-
-  // ---- Data Summary ----
+  // ---- Data Summary — always from REAL_STATS ----
   let summaryHtml = '';
   if (activeTab === 'dz') {
-    const tA = campaignData.filter(r => r.tier === 'A').length;
-    const tB = campaignData.filter(r => r.tier === 'B').length;
-    const tC = campaignData.filter(r => r.tier === 'C').length;
-    const hasEmail = campaignData.filter(r => r.email).length;
     summaryHtml = `
       <div class="sidebar-card">
         <div class="sidebar-card-title">Data Summary</div>
         <div class="summary-row">
           <span class="summary-label"><span class="dot-a"></span>Tier A</span>
-          <span class="summary-value">${tA}</span>
+          <span class="summary-value">${REAL_STATS.dz.tierA}</span>
         </div>
         <div class="summary-row">
           <span class="summary-label"><span class="dot-b"></span>Tier B</span>
-          <span class="summary-value">${tB}</span>
+          <span class="summary-value">${REAL_STATS.dz.tierB}</span>
         </div>
         <div class="summary-row">
           <span class="summary-label"><span class="dot-c"></span>Tier C</span>
-          <span class="summary-value">${tC}</span>
+          <span class="summary-value">${REAL_STATS.dz.tierC}</span>
         </div>
         <div class="summary-row">
           <span class="summary-label"><span class="dot-email"></span>Has Email</span>
-          <span class="summary-value">${hasEmail}</span>
+          <span class="summary-value">${REAL_STATS.dz.withEmail}</span>
         </div>
       </div>
     `;
   } else if (activeTab === 'outreach') {
-    const replied = campaignData.filter(r => r.status === 'replied').length;
-    const active  = campaignData.filter(r => r.status === 'active').length;
-    const hasEmail = campaignData.filter(r => r.email).length;
     summaryHtml = `
       <div class="sidebar-card">
         <div class="sidebar-card-title">Data Summary</div>
         <div class="summary-row">
           <span class="summary-label"><span class="dot-a"></span>Replied</span>
-          <span class="summary-value">${replied}</span>
+          <span class="summary-value">${REAL_STATS.outreach.replied}</span>
         </div>
         <div class="summary-row">
           <span class="summary-label"><span class="dot-email"></span>Active</span>
-          <span class="summary-value">${active}</span>
+          <span class="summary-value">${REAL_STATS.outreach.active}</span>
         </div>
         <div class="summary-row">
-          <span class="summary-label"><span class="dot-email"></span>Has Email</span>
-          <span class="summary-value">${hasEmail}</span>
+          <span class="summary-label"><span class="dot-email"></span>Emails Sent</span>
+          <span class="summary-value">${REAL_STATS.outreach.sent}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><span class="dot-a"></span>Opportunities</span>
+          <span class="summary-value">${REAL_STATS.outreach.opportunities}</span>
         </div>
       </div>
     `;
   } else {
-    const hasEmail = campaignData.filter(r => r.email).length;
     summaryHtml = `
       <div class="sidebar-card">
         <div class="sidebar-card-title">Data Summary</div>
         <div class="summary-row">
-          <span class="summary-label"><span class="dot-email"></span>Has Email</span>
-          <span class="summary-value">${hasEmail}</span>
+          <span class="summary-label"><span class="dot-a"></span>Total Aircraft</span>
+          <span class="summary-value">${REAL_STATS.nap.total}</span>
         </div>
         <div class="summary-row">
-          <span class="summary-label"><span class="dot-a"></span>Identified</span>
-          <span class="summary-value">${campaignData.length}</span>
+          <span class="summary-label"><span class="dot-email"></span>Has Email</span>
+          <span class="summary-value">${REAL_STATS.nap.withEmail}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><span class="dot-b"></span>Confirmed Reg.</span>
+          <span class="summary-value">${REAL_STATS.nap.withRegistration}</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-label"><span class="dot-c"></span>Countries</span>
+          <span class="summary-value">${REAL_STATS.nap.countries}</span>
         </div>
       </div>
     `;
   }
 
-  // ---- Top Sources (DZ only) ----
+  // ---- Top Sources (DZ only) — from REAL_STATS ----
   let sourcesHtml = '';
   if (activeTab === 'dz') {
-    const sourceCounts = {};
-    campaignData.forEach(r => { sourceCounts[r.source] = (sourceCounts[r.source]||0) + 1; });
-    const sorted = Object.entries(sourceCounts).sort((a,b) => b[1]-a[1]).slice(0,6);
-    const maxV = sorted.length ? sorted[0][1] : 1;
-    const items = sorted.map(([k,v]) => ({ label: k, count: v }));
+    const srcItems = REAL_STATS.dz.sources.map(s => ({ label: s.name, count: s.count }));
+    const maxV = srcItems.length ? srcItems[0].count : 1;
     sourcesHtml = `
       <div class="sidebar-card">
         <div class="sidebar-card-title">Top Sources</div>
-        ${buildBarChart(items, maxV)}
+        ${buildBarChart(srcItems, maxV)}
       </div>
     `;
   }
 
-  // ---- Top Countries ----
-  const countryCounts = {};
-  campaignData.forEach(r => { countryCounts[r.country] = (countryCounts[r.country]||0) + 1; });
-  const sortedC = Object.entries(countryCounts).sort((a,b) => b[1]-a[1]).slice(0,5);
-  const maxC = sortedC.length ? sortedC[0][1] : 1;
-  const countryItems = sortedC.map(([k,v]) => ({ label: (countryFlags[k]||'🌐') + ' ' + k, count: v }));
-  const countriesHtml = `
-    <div class="sidebar-card">
-      <div class="sidebar-card-title">Top Countries</div>
-      ${buildBarChart(countryItems, maxC)}
-    </div>
-  `;
+  // ---- Campaigns (Outreach only) — from REAL_STATS ----
+  let campaignsHtml = '';
+  if (activeTab === 'outreach') {
+    const campItems = REAL_STATS.outreach.campaigns.map(c => ({ label: c.name, count: c.count }));
+    const maxV = campItems.length ? campItems[0].count : 1;
+    campaignsHtml = `
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Campaigns</div>
+        ${buildBarChart(campItems, maxV)}
+      </div>
+    `;
+  }
 
-  sidebar.innerHTML = summaryHtml + sourcesHtml + countriesHtml;
+  // ---- Top Countries — from REAL_STATS (DZ) or sample fallback ----
+  let countriesHtml = '';
+  if (activeTab === 'dz') {
+    const cItems = REAL_STATS.dz.topCountries.map(c => ({ label: c.flag + ' ' + c.name, count: c.count }));
+    const maxC = cItems.length ? cItems[0].count : 1;
+    countriesHtml = `
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Top Countries</div>
+        ${buildBarChart(cItems, maxC)}
+      </div>
+    `;
+  } else {
+    // For outreach and NAP, derive from sample data
+    const campaignData = getCampaignData();
+    const countryCounts = {};
+    campaignData.forEach(r => { countryCounts[r.country] = (countryCounts[r.country]||0) + 1; });
+    const sortedC = Object.entries(countryCounts).sort((a,b) => b[1]-a[1]).slice(0,5);
+    const maxC = sortedC.length ? sortedC[0][1] : 1;
+    const countryItems = sortedC.map(([k,v]) => ({ label: (countryFlags[k]||'🌐') + ' ' + k, count: v }));
+    countriesHtml = `
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Top Countries</div>
+        ${buildBarChart(countryItems, maxC)}
+      </div>
+    `;
+  }
+
+  sidebar.innerHTML = summaryHtml + sourcesHtml + campaignsHtml + countriesHtml;
 }
 
 // ─────────────────────────────────────────────
@@ -1302,6 +1376,7 @@ function render() {
   }
 
   const tabLabel = activeTab === 'dz' ? 'Dropzone Operators' : activeTab === 'outreach' ? 'Outreach' : 'Aircraft Owners';
+  const tabTotal = activeTab === 'dz' ? REAL_STATS.dz.total : activeTab === 'outreach' ? REAL_STATS.outreach.total : REAL_STATS.nap.total;
 
   // Tier filter — only shown on DZ tab
   const tierFilterHtml = activeTab === 'dz' ? `
@@ -1353,6 +1428,9 @@ function render() {
           </thead>
           <tbody id="tableBody"></tbody>
         </table>
+      </div>
+      <div style="padding:8px 16px;border-top:1px solid var(--border);font-size:10.5px;color:var(--text-tertiary);flex-shrink:0;">
+        Viser utvalgte leads — fullversjon inneholder ${tabTotal} oppføringer
       </div>
     </div>
   `;
