@@ -619,18 +619,47 @@ a:hover {
   line-height: 1.5;
 }
 
-/* 3-column screenshot grid for ads */
-.cs-screenshot-grid-3 {
-  grid-template-columns: repeat(3, 1fr) !important;
-}
-
 @media (max-width: 900px) {
   .earlier-intro {
     grid-template-columns: 1fr;
     gap: 24px;
   }
-  .cs-screenshot-grid-3 {
-    grid-template-columns: 1fr !important;
+}
+
+/* Ad screenshots layout */
+.screenshot-ads-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.screenshot-portrait img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.screenshot-portrait .cs-screenshot-caption,
+.screenshot-wide .cs-screenshot-caption {
+  margin-top: 8px;
+}
+
+.screenshot-wide {
+  margin-top: 8px;
+}
+
+.screenshot-wide img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+@media (max-width: 600px) {
+  .screenshot-ads-row {
+    grid-template-columns: 1fr;
   }
 }
 
