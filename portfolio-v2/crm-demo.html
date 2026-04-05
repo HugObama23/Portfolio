@@ -1064,7 +1064,7 @@
       </svg>
       <span id="themeLabel">Light</span>
     </button>
-    <span class="demo-badge">Demo</span>
+    <span class="demo-badge">Simulering med ekte tall</span>
   </div>
 </header>
 
@@ -1081,7 +1081,7 @@
 </main>
 
 <!-- DEMO LABEL -->
-<div class="demo-corner">Demo — sample data</div>
+<div class="demo-corner">Simulering med ekte tall</div>
 
 <!-- THREAD PANEL OVERLAY -->
 <div class="thread-overlay" id="threadOverlay">
@@ -1223,14 +1223,17 @@ const SAMPLE_DATA = {
 // ─────────────────────────────────────────────
 //  STATE
 // ─────────────────────────────────────────────
-let activeTab      = 'dz';
-let activeCampaign = 'all';
-let searchQuery    = '';
-let tierFilter     = 'all';
-let countryFilter  = 'all';
-let sortState      = { col: null, dir: 1 };
-let isLight        = false;
-let activeThread   = null;  // company string of open thread
+let activeTab             = 'dz';
+let activeCampaign        = 'all';
+let searchQuery           = '';
+let tierFilter            = 'all';
+let countryFilter         = 'all';
+let outreachCampaignFilter = 'all';  // pill filter for Outreach tab
+let outreachStatusFilter  = 'all';  // pill filter for Outreach tab
+let napAircraftFilter     = 'all';  // pill filter for NAP tab
+let sortState             = { col: null, dir: 1 };
+let isLight               = false;
+let activeThread          = null;  // company string of open thread
 
 // ─────────────────────────────────────────────
 //  UTILS
@@ -1285,12 +1288,15 @@ function toggleTheme() {
 //  TAB SWITCHING
 // ─────────────────────────────────────────────
 function switchTab(tab) {
-  activeTab      = tab;
-  activeCampaign = 'all';
-  searchQuery    = '';
-  tierFilter     = 'all';
-  countryFilter  = 'all';
-  sortState      = { col: null, dir: 1 };
+  activeTab              = tab;
+  activeCampaign         = 'all';
+  searchQuery            = '';
+  tierFilter             = 'all';
+  countryFilter          = 'all';
+  outreachCampaignFilter = 'all';
+  outreachStatusFilter   = 'all';
+  napAircraftFilter      = 'all';
+  sortState              = { col: null, dir: 1 };
   closeThread();
   document.querySelectorAll('.tab').forEach(t => {
     t.classList.toggle('active', t.dataset.tab === tab);
@@ -1300,6 +1306,13 @@ function switchTab(tab) {
 
 function switchCampaign(c) {
   activeCampaign = c;
+  // Keep outreach pill in sync with sub-tab
+  if (activeTab === 'outreach') {
+    outreachCampaignFilter = c;
+    document.querySelectorAll('.pill-outreach-campaign').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.val === c);
+    });
+  }
   document.querySelectorAll('.subtab').forEach(t => {
     t.classList.toggle('active', t.dataset.camp === c);
   });
@@ -1368,6 +1381,25 @@ function getFilteredData() {
   // Country filter (DZ tab only)
   if (activeTab === 'dz' && countryFilter !== 'all') {
     data = data.filter(r => r.country === countryFilter);
+  }
+
+  // Outreach status pill filter
+  if (activeTab === 'outreach' && outreachStatusFilter !== 'all') {
+    data = data.filter(r => r.status === outreachStatusFilter);
+  }
+
+  // NAP aircraft type pill filter
+  if (activeTab === 'nap' && napAircraftFilter !== 'all') {
+    if (napAircraftFilter === 'caravan') {
+      data = data.filter(r => r.aircraft.toLowerCase().includes('caravan'));
+    } else if (napAircraftFilter === 'twinotter') {
+      data = data.filter(r => r.aircraft.toLowerCase().includes('twin otter'));
+    } else if (napAircraftFilter === 'other') {
+      data = data.filter(r => {
+        const a = r.aircraft.toLowerCase();
+        return !a.includes('caravan') && !a.includes('twin otter');
+      });
+    }
   }
 
   const q = searchQuery.toLowerCase();
@@ -1707,6 +1739,48 @@ function handleCountryFilter(val) {
 }
 
 // ─────────────────────────────────────────────
+//  OUTREACH PILL FILTER HANDLERS
+// ─────────────────────────────────────────────
+function handleOutreachCampaignFilter(val) {
+  outreachCampaignFilter = val;
+  // Keep sub-tab in sync: if a specific campaign is chosen via pill, sync the sub-tab too
+  activeCampaign = val;
+  document.querySelectorAll('.subtab').forEach(t => {
+    t.classList.toggle('active', t.dataset.camp === val);
+  });
+  document.querySelectorAll('.pill-outreach-campaign').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.val === val);
+  });
+  renderTable();
+  renderSidebar();
+  const countEl = document.getElementById('tableCount');
+  if (countEl) countEl.textContent = getFilteredData().length;
+}
+
+function handleOutreachStatusFilter(val) {
+  outreachStatusFilter = val;
+  document.querySelectorAll('.pill-outreach-status').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.val === val);
+  });
+  renderTable();
+  const countEl = document.getElementById('tableCount');
+  if (countEl) countEl.textContent = getFilteredData().length;
+}
+
+// ─────────────────────────────────────────────
+//  NAP PILL FILTER HANDLER
+// ─────────────────────────────────────────────
+function handleNapAircraftFilter(val) {
+  napAircraftFilter = val;
+  document.querySelectorAll('.pill-nap-aircraft').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.val === val);
+  });
+  renderTable();
+  const countEl = document.getElementById('tableCount');
+  if (countEl) countEl.textContent = getFilteredData().length;
+}
+
+// ─────────────────────────────────────────────
 //  THREAD PANEL
 // ─────────────────────────────────────────────
 const THREAD_DATA = {
@@ -1868,6 +1942,32 @@ function render() {
   const tabLabel = activeTab === 'dz' ? 'Dropzone Operators' : activeTab === 'outreach' ? 'Outreach' : 'Aircraft Owners';
   const tabTotal = activeTab === 'dz' ? REAL_STATS.dz.total : activeTab === 'outreach' ? REAL_STATS.outreach.total : REAL_STATS.nap.total;
 
+  // ── Outreach pill filters (Campaign + Status) ──
+  const outreachCampaignPills = activeTab === 'outreach' ? `
+    <div style="display:flex;align-items:center;gap:4px">
+      ${['all','eu','na','scandi'].map(v => `
+        <button class="subtab pill-outreach-campaign ${outreachCampaignFilter===v?'active':''}" data-val="${v}" onclick="handleOutreachCampaignFilter('${v}')" style="padding:3px 10px;font-size:11px">${v==='all'?'All':v.charAt(0).toUpperCase()+v.slice(1)}</button>
+      `).join('')}
+    </div>
+  ` : '';
+
+  const outreachStatusPills = activeTab === 'outreach' ? `
+    <div style="display:flex;align-items:center;gap:4px">
+      ${[{v:'all',l:'All'},{v:'active',l:'Active'},{v:'replied',l:'Replied'}].map(o => `
+        <button class="subtab pill-outreach-status ${outreachStatusFilter===o.v?'active':''}" data-val="${o.v}" onclick="handleOutreachStatusFilter('${o.v}')" style="padding:3px 10px;font-size:11px">${o.l}</button>
+      `).join('')}
+    </div>
+  ` : '';
+
+  // ── NAP aircraft pill filter ──
+  const napAircraftPills = activeTab === 'nap' ? `
+    <div style="display:flex;align-items:center;gap:4px">
+      ${[{v:'all',l:'All'},{v:'caravan',l:'Caravan'},{v:'twinotter',l:'Twin Otter'},{v:'other',l:'Other'}].map(o => `
+        <button class="subtab pill-nap-aircraft ${napAircraftFilter===o.v?'active':''}" data-val="${o.v}" onclick="handleNapAircraftFilter('${o.v}')" style="padding:3px 10px;font-size:11px">${o.l}</button>
+      `).join('')}
+    </div>
+  ` : '';
+
   // Tier filter — only shown on DZ tab (custom dropdown)
   const tierLabel = tierFilter === 'all' ? 'All Tiers' : 'Tier ' + tierFilter;
   const tierOptions = [
@@ -1933,6 +2033,9 @@ function render() {
             value="${escHtml(searchQuery)}"
             oninput="handleSearch(this.value)"
           />
+          ${outreachCampaignPills}
+          ${outreachStatusPills}
+          ${napAircraftPills}
           ${tierFilterHtml}
           ${countryFilterHtml}
           <button class="export-btn" onclick="alert('Demo mode — export not available')">
