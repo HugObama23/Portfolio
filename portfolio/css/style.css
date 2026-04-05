@@ -692,6 +692,53 @@ section, footer {
 }
 
 /* ====================================================
+   CASE SCREENSHOTS
+   ==================================================== */
+.case-screenshot {
+  margin: 0 24px 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.case-screenshot img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.screenshot-caption {
+  display: block;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--terminal-bg);
+  border-top: 1px solid var(--border);
+}
+
+.case-screenshots-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0 24px 16px;
+}
+
+.case-screenshots-row .case-screenshot {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .case-screenshots-row {
+    grid-template-columns: 1fr;
+    margin: 0 16px 12px;
+  }
+  .case-screenshot {
+    margin: 0 16px 12px;
+  }
+}
+
+/* ====================================================
    SKILLS
    ==================================================== */
 #skills {
