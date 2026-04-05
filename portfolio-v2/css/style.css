@@ -564,33 +564,6 @@ a:hover {
   border-top: 1px solid var(--border);
 }
 
-.earlier-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.earlier-card {
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 32px 28px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.earlier-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.06);
-}
-
-.earlier-card-top {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
 .earlier-type {
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -600,33 +573,64 @@ a:hover {
   color: var(--accent);
 }
 
-.earlier-title {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
+/* Fjord Digital intro */
+.earlier-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  margin-bottom: 72px;
 }
 
-.earlier-desc {
-  font-size: 0.92rem;
-  line-height: 1.65;
+.earlier-intro-text p {
+  font-size: 1.05rem;
+  line-height: 1.7;
   color: var(--text-secondary);
-  flex: 1;
 }
 
-.earlier-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding-top: 8px;
+.earlier-intro-img img {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+/* Earlier case study sections */
+.earlier-case {
+  padding: 64px 0;
   border-top: 1px solid var(--border);
 }
 
+.earlier-case-header {
+  margin-bottom: 32px;
+}
+
+.earlier-case-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin: 8px 0;
+}
+
+.earlier-case-tagline {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* 3-column screenshot grid for ads */
+.cs-screenshot-grid-3 {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
 @media (max-width: 900px) {
-  .earlier-grid {
+  .earlier-intro {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 24px;
+  }
+  .cs-screenshot-grid-3 {
+    grid-template-columns: 1fr !important;
   }
 }
 
