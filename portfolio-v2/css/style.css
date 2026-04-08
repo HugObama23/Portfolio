@@ -147,6 +147,37 @@ a:hover {
   border-bottom: 1px solid var(--border);
 }
 
+.hero-name-row {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.hero-profile {
+  flex-shrink: 0;
+}
+
+.hero-profile-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 18px;
+  object-fit: cover;
+  object-position: center 30%;
+  border: 2px solid var(--border);
+}
+
+@media (max-width: 768px) {
+  .hero-name-row {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 1.2rem;
+  }
+  .hero-profile-img {
+    width: 100px;
+    height: 100px;
+  }
+}
+
 .hero-label {
   font-family: var(--mono);
   font-size: 0.72rem;
