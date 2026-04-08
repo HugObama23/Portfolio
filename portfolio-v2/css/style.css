@@ -150,16 +150,28 @@ a:hover {
 .hero-name-row {
   display: flex;
   align-items: center;
-  gap: 2.5rem;
+  justify-content: space-between;
 }
 
 .hero-profile {
   flex-shrink: 0;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hero {
+  position: relative;
+}
+
+.hero .container {
+  position: relative;
 }
 
 .hero-profile-img {
-  width: 150px;
-  height: 150px;
+  width: 160px;
+  height: 160px;
   border-radius: 18px;
   object-fit: cover;
   object-position: center 30%;
@@ -167,10 +179,10 @@ a:hover {
 }
 
 @media (max-width: 768px) {
-  .hero-name-row {
-    flex-direction: column-reverse;
-    align-items: flex-start;
-    gap: 1.2rem;
+  .hero-profile {
+    position: static;
+    transform: none;
+    margin-bottom: 1.5rem;
   }
   .hero-profile-img {
     width: 100px;
