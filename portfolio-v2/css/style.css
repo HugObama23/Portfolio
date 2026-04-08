@@ -156,7 +156,7 @@ a:hover {
 .hero-profile {
   flex-shrink: 0;
   position: absolute;
-  right: 0;
+  right: 15%;
   top: 50%;
   transform: translateY(-50%);
 }
@@ -170,8 +170,8 @@ a:hover {
 }
 
 .hero-profile-img {
-  width: 160px;
-  height: 160px;
+  width: 200px;
+  height: 200px;
   border-radius: 18px;
   object-fit: cover;
   object-position: center 30%;
