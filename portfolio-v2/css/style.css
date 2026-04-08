@@ -147,49 +147,6 @@ a:hover {
   border-bottom: 1px solid var(--border);
 }
 
-.hero-name-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.hero-profile {
-  flex-shrink: 0;
-  position: absolute;
-  right: 15%;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.hero {
-  position: relative;
-}
-
-.hero .container {
-  position: relative;
-}
-
-.hero-profile-img {
-  width: 200px;
-  height: 200px;
-  border-radius: 18px;
-  object-fit: cover;
-  object-position: center 30%;
-  border: 2px solid var(--border);
-}
-
-@media (max-width: 768px) {
-  .hero-profile {
-    position: static;
-    transform: none;
-    margin-bottom: 1.5rem;
-  }
-  .hero-profile-img {
-    width: 100px;
-    height: 100px;
-  }
-}
-
 .hero-label {
   font-family: var(--mono);
   font-size: 0.72rem;
