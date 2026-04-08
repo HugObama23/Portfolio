@@ -147,6 +147,19 @@ a:hover {
   border-bottom: 1px solid var(--border);
 }
 
+.hero-profile {
+  margin-bottom: 2rem;
+}
+
+.hero-profile-img {
+  width: 140px;
+  height: 140px;
+  border-radius: 20px;
+  object-fit: cover;
+  object-position: center 20%;
+  border: 2px solid var(--border);
+}
+
 .hero-label {
   font-family: var(--mono);
   font-size: 0.72rem;
